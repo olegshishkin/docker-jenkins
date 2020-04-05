@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+
+  docker:
+    image: docker:dind
+    container_name: jenkins-docker
+    privileged: true
+    ports:
+      - 2376:2376
+    env_file:
+      - docker.env
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client
+
+  jenkins:
+    image: jenkinsci/blueocean
+    container_name: jenkins-blueocean
+    ports:
+      - 8081:8080
+      - 50000:50000
+    env_file:
+      - docker.env
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client:ro
+
+volumes:
+  jenkins-data:
+  jenkins-docker-certs:
